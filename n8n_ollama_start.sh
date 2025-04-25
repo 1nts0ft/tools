@@ -1,9 +1,19 @@
 #!/bin/bash
 
-if [ ! -f /workspace/.init_done ]; then
-	echo "Bootstrapping from GitHub..."
-	curl -fsSL https://raw.githubusercontent.com/1nts0ft/tools/refs/heads/main/n8n_ollama_start.sh | bash
-	touch /workspace/.init_done
-else
-	echo "Already initialized. Skipping bootstrap."
-fi
+# Install Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+apt install -y nodejs
+npm install -g n8n
+
+# Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3.3
+
+# Start Ollama in background
+ollama serve &
+
+# Optional wait
+sleep 5
+
+# Start n8n
+n8n
